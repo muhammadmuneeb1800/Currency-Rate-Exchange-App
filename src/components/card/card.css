@@ -1,0 +1,12 @@
+.hover-arrow:hover .arrow-arrow {
+  animation: arrow-arrow 1s infinite alternate;
+}
+
+@keyframes arrow-arrow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
