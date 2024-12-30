@@ -5,6 +5,7 @@ import { LiaExchangeAltSolid } from "react-icons/lia";
 import { StateContext } from "../hooks/states.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
+import background from "../assets/images/bg-footer.png";
 
 export default function Home() {
   const {
@@ -24,8 +25,11 @@ export default function Home() {
     setSelectedCurrency,
   } = useContext(StateContext);
 
-  const ConNames = useSelector((store) => store.countrySlice.rates);
-  const ConRates = useSelector((store) => store.countrySlice.names);
+  const ConNames =
+    useSelector((store: string[]) => store.countrySlice.rates) || [];
+  const ConRates =
+    useSelector((store: string[]) => store.countrySlice.names) || [];
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,6 +41,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch<any>(fetchCountry());
+    console.log(fetchCountry());
   }, [dispatch]);
 
   const handleAmountChange = () => {
@@ -55,7 +60,7 @@ export default function Home() {
 
     try {
       const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/473bc8271599bb7ad98f1f3f/pair/${fromCurrency}/${toCurrency}/${amount}`
+        `https://v6.exchangerate-api.com/v6/602339e67573287ccc7bae40/pair/${fromCurrency}/${toCurrency}/${amount}`
       );
       const result = await response.data.conversion_result;
       setUpdatedAmount(result);
@@ -221,7 +226,7 @@ export default function Home() {
       </div>
 
       <div className="bg-[#F0F5FF] mt-64">
-        <div className="bg-image p-20">
+        <div style={{ background: `url(${background})` }} className="p-20">
           <h1 className="lg:text-3xl text-xl md:text-2xl font-bold text-center">
             Popular currencies
           </h1>

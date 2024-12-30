@@ -3,7 +3,11 @@ import { LiaExchangeAltSolid } from "react-icons/lia";
 import Button from "../components/button/Button.tsx";
 import { StateContext } from "../hooks/states.tsx";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCountry } from "../store/slices/countrySlice.tsx";
+import {
+  fetchCountry,
+  selectCountryNames,
+  selectRates,
+} from "../store/slices/countrySlice.tsx";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
@@ -21,8 +25,10 @@ export default function Convert() {
     selectedCurrency,
   } = useContext(StateContext);
 
-  const ConNames = useSelector((store) => store.countrySlice.rates) || [];
-  const ConRates = useSelector((store) => store.countrySlice.names) || [];
+  const ConNames =
+    useSelector((store: string[]) => store.countrySlice.rates) || [];
+  const ConRates =
+    useSelector((store: string[]) => store.countrySlice.names) || [];
   const dispatch = useDispatch();
 
   const nameIndex = ConNames.indexOf(selectedCurrency);
@@ -61,7 +67,7 @@ export default function Convert() {
 
     try {
       const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/473bc8271599bb7ad98f1f3f/pair/${selectedCurrency}/${toCurrency}/${selamount}`
+        `https://v6.exchangerate-api.com/v6/602339e67573287ccc7bae40/pair/${selectedCurrency}/${toCurrency}/${selamount}`
       );
       const result = response.data.conversion_result;
       setSelUpdatedAmount(result);

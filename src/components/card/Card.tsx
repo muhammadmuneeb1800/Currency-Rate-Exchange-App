@@ -2,8 +2,9 @@ import React from "react";
 import { FaArrowRight } from "react-icons/fa6";
 import "./card.css";
 import { Link } from "react-router-dom";
+import { CardProps } from "../../types/type";
 
-export default function Card(props) {
+const Card: React.FC<CardProps> = (props) => {
   return (
     <>
       <Link to={`/convert?from=${props.to}&to=${props.from}`}>
@@ -17,4 +18,6 @@ export default function Card(props) {
       </Link>
     </>
   );
-}
+};
+
+export default Card;
