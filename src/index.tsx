@@ -5,7 +5,6 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { store } from "../src/store/store.tsx";
 import { Provider } from "react-redux";
-import StatesProvider from "./hooks/states.tsx";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,11 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <StatesProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </StatesProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
     </BrowserRouter>
   </React.StrictMode>
 );

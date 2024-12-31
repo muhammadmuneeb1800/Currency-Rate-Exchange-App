@@ -1,9 +1,20 @@
 import React from "react";
-import img from "../assets/images/Vector.png";
+import img from "../assets/images/vector.png";
 import Button from "../components/button/Button.tsx";
 import Card from "../components/card/Card.tsx";
 
 export default function IndividualCurrency() {
+  const cardData = [
+    { to: "USD", from: "AUD" },
+    { to: "USD", from: "CAD" },
+    { to: "USD", from: "CNH" },
+    { to: "USD", from: "EUR" },
+    { to: "USD", from: "GBP" },
+    { to: "USD", from: "HKD" },
+    { to: "USD", from: "JPY" },
+    { to: "USD", from: "NZD" },
+    { to: "USD", from: "SGD" },
+  ];
   return (
     <>
       <div className="bg-[#F0F5FF] overflow-hidden md:flex justify-center gap-16 md:px-14 px-4 items-center mt-16 py-16 max-h-[650px]">
@@ -40,15 +51,9 @@ export default function IndividualCurrency() {
       </div>
 
       <div className="flex md:max-w-[599px] lg:max-w-[850px] mx-auto gap-2 justify-center md:justify-start px-3 md:gap-5 items-center flex-wrap mt-16 mb-52">
-        <Card to="USD" from="AUD" />
-        <Card to="USD" from="CAD" />
-        <Card to="USD" from="CNH" />
-        <Card to="USD" from="EUR" />
-        <Card to="USD" from="GBP" />
-        <Card to="USD" from="HKD" />
-        <Card to="USD" from="JPY" />
-        <Card to="USD" from="NZD" />
-        <Card to="USD" from="SGD" />
+        {cardData.map((card, index) => (
+          <Card key={index} to={card.to} from={card.from} />
+        ))}
       </div>
     </>
   );

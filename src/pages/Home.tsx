@@ -1,47 +1,33 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/button/Button.tsx";
 import { LiaExchangeAltSolid } from "react-icons/lia";
-import { StateContext } from "../hooks/states.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import background from "../assets/images/bg-footer.png";
 
 export default function Home() {
-  const {
-    amount,
-    setAmount,
-    updatedAmount,
-    setUpdatedAmount,
-    toCurrency,
-    setToCurrency,
-    fromCurrency,
-    setFromCurrency,
-    iconVisible,
-    setIconVisible,
-    toGoCurrency,
-    setToGoCurrency,
-    selectedCurrency,
-    setSelectedCurrency,
-  } = useContext(StateContext);
-
-  const ConNames =
-    useSelector((store: string[]) => store.countrySlice.rates) || [];
-  const ConRates =
-    useSelector((store: string[]) => store.countrySlice.names) || [];
-
+  const [amount, setAmount] = useState(0);
+  const [updatedAmount, setUpdatedAmount] = useState(0);
+  const [toCurrency, setToCurrency] = useState("EUR");
+  const [fromCurrency, setFromCurrency] = useState("USD");
+  const [iconVisible, setIconVisible] = useState(false);
+  const [toGoCurrency, setToGoCurrency] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("");
   const dispatch = useDispatch();
+
+  const ConNames = useSelector((store: any) => store.countrySlice.rates) || [];
+  const ConRates = useSelector((store: any) => store.countrySlice.names) || [];
 
   useEffect(() => {
     setToGoCurrency(ConNames);
   }, [ConNames, setToGoCurrency]);
 
-  const nameIndex = ConNames.indexOf(fromCurrency);
-  const rateIndex = ConNames.indexOf(toCurrency);
+  const nameIndex = ConNames.indexOf(fromCurrency) || [];
+  const rateIndex = ConNames.indexOf(toCurrency) || [];
 
   useEffect(() => {
     dispatch<any>(fetchCountry());
-    console.log(fetchCountry());
   }, [dispatch]);
 
   const handleAmountChange = () => {
@@ -102,7 +88,7 @@ export default function Home() {
                     name="amount"
                     id="amount"
                     placeholder="0"
-                    value={amount ? amount : ""}
+                    value={amount || ""}
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
@@ -110,11 +96,11 @@ export default function Home() {
                   <select
                     name="selectCurrency"
                     id=""
-                    value={fromCurrency}
+                    value={fromCurrency || "USD"}
                     onChange={(e) => setFromCurrency(e.target.value)}
                     className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
                   >
-                    {ConNames.map((con, i) => {
+                    {ConNames?.map((con, i) => {
                       return (
                         <option key={i} value={con}>
                           {con}
@@ -136,7 +122,7 @@ export default function Home() {
                     name="fromCurrency"
                     id="fromCurrency"
                     readOnly
-                    value={updatedAmount ? updatedAmount : ""}
+                    value={updatedAmount || 0}
                     onChange={(e) => setUpdatedAmount(e.target.value)}
                   />
                 </div>
@@ -148,7 +134,7 @@ export default function Home() {
                     onChange={(e) => setToCurrency(e.target.value)}
                     className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
                   >
-                    {ConNames.map((con, i) => {
+                    {ConNames?.map((con, i) => {
                       return (
                         <option key={i} value={con}>
                           {con}
@@ -239,7 +225,7 @@ export default function Home() {
                 value={selectedCurrency}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
               >
-                {toGoCurrency.map((con, i) => (
+                {toGoCurrency?.map((con, i) => (
                   <>
                     <option key={i} value={con}>
                       {con}

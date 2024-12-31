@@ -1,42 +1,41 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import Button from "../components/button/Button.tsx";
-import { StateContext } from "../hooks/states.tsx";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchCountry,
-  selectCountryNames,
-  selectRates,
-} from "../store/slices/countrySlice.tsx";
-import axios from "axios";
+import { axiosInstance, fetchCountry } from "../store/slices/countrySlice.tsx";
 import { useLocation } from "react-router-dom";
 
 export default function Convert() {
-  const {
-    selUpdatedAmount,
-    setSelUpdatedAmount,
-    selamount,
-    setSelAmount,
-    toCurrency,
-    setToCurrency,
-    setSelectedCurrency,
-    iconVisible,
-    setIconVisible,
-    selectedCurrency,
-  } = useContext(StateContext);
+  const [selamount, setSelAmount] = useState<number | string>(0);
+  const [selUpdatedAmount, setSelUpdatedAmount] = useState<number | string>(0);
+  const [toCurrency, setToCurrency] = useState("EUR");
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [iconVisible, setIconVisible] = useState(false);
 
-  const ConNames =
-    useSelector((store: string[]) => store.countrySlice.rates) || [];
-  const ConRates =
-    useSelector((store: string[]) => store.countrySlice.names) || [];
+  const ConNames = useSelector((store: any) => store.countrySlice.rates) || [];
+  const ConRates = useSelector((store: any) => store.countrySlice.names) || [];
+
+  const nameIndex = ConNames.indexOf(selectedCurrency) || [];
+  const rateIndex = ConNames.indexOf(toCurrency) || [];
   const dispatch = useDispatch();
 
-  const nameIndex = ConNames.indexOf(selectedCurrency);
-  const rateIndex = ConNames.indexOf(toCurrency);
+  const location = useLocation();
+  const getQueryParam = (name: string): string | null => {
+    const urlParams = new URLSearchParams(location.search);
+    return urlParams.get(name);
+  };
 
   useEffect(() => {
     dispatch<any>(fetchCountry());
-  }, [dispatch]);
+
+    const currency = getQueryParam("currency") || "";
+    const to = getQueryParam("to") || "";
+    const from = getQueryParam("from") || "";
+
+    if (currency) setSelectedCurrency(currency);
+    if (from) setSelectedCurrency(from);
+    if (to) setToCurrency(to);
+  }, [dispatch, location.search]);
 
   const handleAmountChange = () => {
     setSelAmount(selUpdatedAmount);
@@ -44,32 +43,19 @@ export default function Convert() {
   };
 
   const showInfo = () => {
-    setIconVisible(!iconVisible);
+    setIconVisible((prev) => !prev);
   };
 
-  const location = useLocation();
-  const getQueryParam = (name: string) => {
-    const urlParams = new URLSearchParams(location.search);
-    return urlParams.get(name);
-  };
-
-  useEffect(() => {
-    const to = getQueryParam("to");
-    const from = getQueryParam("from");
-    if (to) setToCurrency(to);
-    if (from) setSelectedCurrency(from);
-  }, [location.search, setToCurrency, setSelectedCurrency]);
-
-  const convertHandle = async () => {
+  const convertHandle = async (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (!selamount) {
       return alert("Enter amount");
     }
 
     try {
-      const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/602339e67573287ccc7bae40/pair/${selectedCurrency}/${toCurrency}/${selamount}`
-      );
-      const result = response.data.conversion_result;
+      const endpoint = `/pair/${selectedCurrency}/${toCurrency}/${selamount}`;
+      const response = await axiosInstance.get(endpoint);
+      const result = response?.data?.conversion_result || 0;
       setSelUpdatedAmount(result);
     } catch (error) {
       console.error("Error fetching conversion data:", error);
@@ -92,8 +78,8 @@ export default function Convert() {
           </h1>
           <p className="text-center mt-7 px-4 md:px-5">
             Send secure international business payments in{" "}
-            <span className="font-bold">XX</span> currencies, all at competitive
-            rates with no hidden fees.
+            <span className="font-bold">{ConNames.length}</span> currencies, all
+            at competitive rates with no hidden fees.
           </p>
 
           <div className="mt-8 px-11 md:px-8 flex flex-col space-y-2 md:flex-row justify-between items-center">
@@ -113,11 +99,11 @@ export default function Convert() {
               <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6]">
                 <select
                   name="selectCurrency"
-                  value={selectedCurrency || ""}
+                  value={selectedCurrency || "USD"}
                   onChange={(e) => setSelectedCurrency(e.target.value)}
-                  className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
+                  className="border-none focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
                 >
-                  {ConNames.map((con) => (
+                  {ConNames?.map((con) => (
                     <option key={con} value={con}>
                       {con}
                     </option>
@@ -136,15 +122,15 @@ export default function Convert() {
                   className="outline-none focus:border-none font-bold text-xl md:text-2xl"
                   name="fromCurrency"
                   readOnly
-                  value={selUpdatedAmount || ""}
+                  value={selUpdatedAmount}
                 />
               </div>
               <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6]">
                 <select
                   name="toCurrency"
-                  value={toCurrency || ""}
+                  value={toCurrency}
                   onChange={(e) => setToCurrency(e.target.value)}
-                  className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
+                  className="border-none focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
                 >
                   {ConNames.map((con) => (
                     <option key={con} value={con}>
