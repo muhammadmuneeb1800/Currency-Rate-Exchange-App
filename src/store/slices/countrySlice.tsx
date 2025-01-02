@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TypeOfArray } from "../../types/type";
 import axios from "axios";
+import { dataData } from "../../constants/data.tsx";
 
 export const axiosInstance = axios.create({
   baseURL: "https://v6.exchangerate-api.com/v6/602339e67573287ccc7bae40",
@@ -17,6 +18,7 @@ export const fetchCountry = createAsyncThunk("country/fetch", async () => {
 const initialState: TypeOfArray = {
   names: [],
   rates: [],
+  dataData: dataData,
 };
 
 const countries = createSlice({

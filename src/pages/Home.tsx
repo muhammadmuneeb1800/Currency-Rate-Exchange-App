@@ -5,6 +5,8 @@ import { LiaExchangeAltSolid } from "react-icons/lia";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import background from "../assets/images/bg-footer.png";
+import { BiChevronDown } from "react-icons/bi";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
@@ -12,16 +14,15 @@ export default function Home() {
   const [toCurrency, setToCurrency] = useState("EUR");
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [iconVisible, setIconVisible] = useState(false);
-  const [toGoCurrency, setToGoCurrency] = useState([]);
-  const [selectedCurrency, setSelectedCurrency] = useState("");
-  const dispatch = useDispatch();
+  const [selected, setSelected] = useState<number | string>("");
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
   const ConNames = useSelector((store: any) => store.countrySlice.rates) || [];
   const ConRates = useSelector((store: any) => store.countrySlice.names) || [];
-
-  useEffect(() => {
-    setToGoCurrency(ConNames);
-  }, [ConNames, setToGoCurrency]);
+  const dataData =
+    useSelector((store: any) => store.countrySlice.dataData) || [];
 
   const nameIndex = ConNames.indexOf(fromCurrency) || [];
   const rateIndex = ConNames.indexOf(toCurrency) || [];
@@ -211,34 +212,86 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="bg-[#F0F5FF] mt-64">
-        <div style={{ background: `url(${background})` }} className="p-20">
-          <h1 className="lg:text-3xl text-xl md:text-2xl font-bold text-center">
+      <div className="bg-[#F0F5FF] my-40 md:mt-64">
+        <div
+          style={{ background: `url(${background}) no-repeat center/cover` }}
+          className="p-6 sm:p-10 md:p-20"
+        >
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center">
             Popular currencies
           </h1>
-          <div className="md:flex md:flex-row flex flex-col justify-center gap-0 items-center mt-10">
-            <div>
-              <select
-                name="currency"
-                className="md:w-80 w-60 md:-ml-0 mx-auto py-3 px-3 md:mr-12 border border-[#C6C6C6] rounded-md focus-within:outline focus-within:outline-none focus:ring-2 focus:ring-red-600"
-                id="currency"
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
+          <div className="flex flex-col md:flex-row justify-center items-center mt-10 gap-6 relative">
+            <div className="relative w-full max-w-xs">
+              <div
+                onClick={() => setIsOpenDrop(!isOpenDrop)}
+                className={`
+                  text-xl flex select-none bg-white border-red-600 border-2 rounded-md justify-between p-2 items-center md:text-2xl font-bold cursor-pointer shadow-md`}
               >
-                {toGoCurrency?.map((con, i) => (
-                  <>
-                    <option key={i} value={con}>
-                      {con}
-                    </option>
-                  </>
-                ))}
-              </select>
+                <span
+                  className={`ml-2 ${selected === "" ? "text-[16px]" : ""} ${
+                    selected === "" ? "text-gray-300" : ""
+                  }`}
+                >
+                  {selected || "Select the Country"}
+                </span>
+                <BiChevronDown size={20} className="mr-2 text-gray-600" />
+              </div>
+
+              {isOpenDrop && (
+                <div className="absolute top-full left-0 w-full bg-white rounded-md shadow-lg mt-1 z-50 max-h-56 overflow-y-auto">
+                  <ul className="px-3 py-2 transition-all">
+                    <div className="flex items-center bg-white py-2 px-3 sticky top-0 z-10 border-b border-gray-200">
+                      <AiOutlineSearch size={20} className="text-gray-500" />
+                      <input
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) =>
+                          setInputValue(e.target.value.toLowerCase())
+                        }
+                        placeholder="Search"
+                        className="ml-2 w-full p-2 outline-none placeholder:text-gray-400 text-sm"
+                      />
+                    </div>
+                    {dataData.length > 0 ? (
+                      dataData
+                        .filter((country) =>
+                          country?.currency?.toLowerCase().includes(inputValue)
+                        )
+                        .map((country, i) => (
+                          <li
+                            key={i}
+                            className={`p-2 hover:bg-gray-100 text-lg font-medium cursor-pointer ${
+                              country?.currency?.toLowerCase() ===
+                              selected.toLowerCase()
+                                ? "bg-gray-200 text-black"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setSelected(country?.currency);
+                              setIsOpenDrop(false);
+                              setInputValue("");
+                            }}
+                          >
+                            {country?.currency}
+                            <span className="ml-2 text-sm text-gray-500">
+                              {country?.name}
+                            </span>
+                          </li>
+                        ))
+                    ) : (
+                      <li className="p-2 text-center text-gray-500">
+                        No results found
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
-            <div className="mt-7 md:mt-0">
+
+            {/* Button */}
+            <div className="mt-1 mb-5 md:mb-2 md:mt-0">
               <Button
-                link={`convert?currency=${
-                  selectedCurrency ? selectedCurrency : "USD"
-                }`}
+                link={`convert?currency=${selected || "USD"}`}
                 text="Go"
                 pad="24"
               />
