@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/button/Button.tsx";
 import { LiaExchangeAltSolid } from "react-icons/lia";
-import { useDispatch } from "react-redux";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import background from "../assets/images/bg-footer.png";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useAppSelector } from "../store/store.tsx";
+import { useAppDispatch, useAppSelector } from "../store/store.tsx";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
@@ -19,7 +18,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
   const ConRates = useAppSelector((store) => store.countrySlice.names) || [];
   const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
@@ -28,7 +27,7 @@ export default function Home() {
   const rateIndex = ConNames.indexOf(toCurrency) || "";
 
   useEffect(() => {
-    dispatch<any>(fetchCountry());
+    dispatch(fetchCountry());
   }, [dispatch]);
 
   const handleAmountChange = () => {

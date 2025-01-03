@@ -84,3 +84,15 @@ export const dataData = [
     currency: "SGD",
   },
 ];
+
+export const cardData = [
+  { to: "USD", from: "AUD" },
+  { to: "USD", from: "CAD" },
+  { to: "USD", from: "CNH" },
+  { to: "USD", from: "EUR" },
+  { to: "USD", from: "GBP" },
+  { to: "USD", from: "HKD" },
+  { to: "USD", from: "JPY" },
+  { to: "USD", from: "NZD" },
+  { to: "USD", from: "SGD" },
+];

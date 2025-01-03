@@ -2,19 +2,9 @@ import React from "react";
 import img from "../assets/images/vector.png";
 import Button from "../components/button/Button.tsx";
 import Card from "../components/card/Card.tsx";
+import { cardData } from "../constants/data.tsx";
 
 export default function IndividualCurrency() {
-  const cardData = [
-    { to: "USD", from: "AUD" },
-    { to: "USD", from: "CAD" },
-    { to: "USD", from: "CNH" },
-    { to: "USD", from: "EUR" },
-    { to: "USD", from: "GBP" },
-    { to: "USD", from: "HKD" },
-    { to: "USD", from: "JPY" },
-    { to: "USD", from: "NZD" },
-    { to: "USD", from: "SGD" },
-  ];
   return (
     <>
       <div className="bg-[#F0F5FF] overflow-hidden md:flex justify-center gap-16 md:px-14 px-4 items-center mt-16 py-16 max-h-[650px]">
