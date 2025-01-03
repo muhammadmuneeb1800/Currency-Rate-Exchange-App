@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/button/Button.tsx";
 import { LiaExchangeAltSolid } from "react-icons/lia";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import background from "../assets/images/bg-footer.png";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useAppSelector } from "../store/store.tsx";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
@@ -19,13 +20,12 @@ export default function Home() {
   const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
 
   const dispatch = useDispatch();
-  const ConNames = useSelector((store: any) => store.countrySlice.rates) || [];
-  const ConRates = useSelector((store: any) => store.countrySlice.names) || [];
-  const dataData =
-    useSelector((store: any) => store.countrySlice.dataData) || [];
+  const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
+  const ConRates = useAppSelector((store) => store.countrySlice.names) || [];
+  const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
 
-  const nameIndex = ConNames.indexOf(fromCurrency) || [];
-  const rateIndex = ConNames.indexOf(toCurrency) || [];
+  const nameIndex = ConNames.indexOf(fromCurrency) || "";
+  const rateIndex = ConNames.indexOf(toCurrency) || "";
 
   useEffect(() => {
     dispatch<any>(fetchCountry());
@@ -234,14 +234,18 @@ export default function Home() {
                 >
                   {selected || "Select the Country"}
                 </span>
-                <BiChevronDown size={20} className="mr-2 text-gray-600" />
+                <span className="mr-2 text-gray-600">
+                  <BiChevronDown size={20} />
+                </span>
               </div>
 
               {isOpenDrop && (
                 <div className="absolute top-full left-0 w-full bg-white rounded-md shadow-lg mt-1 z-50 max-h-56 overflow-y-auto">
                   <ul className="px-3 py-2 transition-all">
                     <div className="flex items-center bg-white py-2 px-3 sticky top-0 z-10 border-b border-gray-200">
-                      <AiOutlineSearch size={20} className="text-gray-500" />
+                      <span className="text-gray-500">
+                        <AiOutlineSearch size={20} />
+                      </span>
                       <input
                         type="text"
                         value={inputValue}
