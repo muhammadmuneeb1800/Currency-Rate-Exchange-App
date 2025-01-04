@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import { data } from "../../constants/data.tsx";
+import { countryData } from "../../constants/constants";
 
 const Selectors: React.FC = () => {
   const [countries, setCountries] = useState<string[]>([]);
@@ -9,11 +9,9 @@ const Selectors: React.FC = () => {
   const [selected, setSelected] = useState<string>("EUR");
   const [open, setOpen] = useState<boolean>(false);
 
-  const ConNames = data || [];
-
   useEffect(() => {
-    setCountries(ConNames);
-  }, [ConNames]);
+    setCountries(countryData || []);
+  }, []);
 
   return (
     <div className="w-full max-w-xs md:max-w-sm z-50 lg:max-w-md font-medium">

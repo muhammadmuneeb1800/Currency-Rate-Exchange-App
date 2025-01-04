@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import Button from "../components/button/Button.tsx";
-import { axiosInstance, fetchCountry } from "../store/slices/countrySlice.tsx";
-import { useLocation } from "react-router-dom";
+import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../store/store.tsx";
+import { useQueryParams } from "../hooks/useQueryParams.tsx";
+import { useCurrencyConverter } from "../hooks/useCurrencyConverter.tsx";
 
 export default function Convert() {
-  const [selamount, setSelAmount] = useState<number | string>(0);
-  const [selUpdatedAmount, setSelUpdatedAmount] = useState<number | string>(0);
+  const getQueryParam = useQueryParams();
+  const {
+    selamount,
+    setSelAmount,
+    selUpdatedAmount,
+    setSelUpdatedAmount,
+    convertHandler,
+  } = useCurrencyConverter();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [iconVisible, setIconVisible] = useState<boolean>(false);
   const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
@@ -24,15 +31,8 @@ export default function Convert() {
   const rateIndex = ConNames.indexOf(selected) || "";
   const dispatch = useAppDispatch();
 
-  const location = useLocation();
-  const getQueryParam = (name: string): string | null => {
-    const urlParams = new URLSearchParams(location.search);
-    return urlParams.get(name);
-  };
-
   useEffect(() => {
     dispatch(fetchCountry());
-
     const currency = getQueryParam("currency") || "";
     const to = getQueryParam("to") || "";
     const from = getQueryParam("from") || "";
@@ -40,7 +40,7 @@ export default function Convert() {
     if (currency) setSelectedCurrency(currency);
     if (from) setSelectedCurrency(from);
     if (to) setSelected(to);
-  }, [dispatch, location.search]);
+  }, [dispatch, getQueryParam]);
 
   const handleAmountChange = () => {
     setSelAmount(selUpdatedAmount);
@@ -49,23 +49,6 @@ export default function Convert() {
 
   const showInfo = () => {
     setIconVisible(!iconVisible);
-  };
-
-  const convertHandle = async (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (!selamount) {
-      return alert("Enter amount");
-    }
-
-    try {
-      const endpoint = `/pair/${selectedCurrency}/${selected}/${selamount}`;
-      const response = await axiosInstance.get(endpoint);
-      const result = response?.data?.conversion_result || 0;
-      setSelUpdatedAmount(result);
-    } catch (error) {
-      console.error("Error fetching conversion data:", error);
-      alert("Failed to fetch conversion data. Please try again.");
-    }
   };
 
   return (
@@ -238,7 +221,9 @@ export default function Convert() {
             </div>
 
             <div
-              onClick={convertHandle}
+              onClick={() =>
+                convertHandler(selectedCurrency, selected, selamount)
+              }
               className="md:pr-14 text-center md:text-end mt-9"
             >
               <Button text="Convert" pad="24" />

@@ -1,4 +1,6 @@
-export const dataData = [
+import { Country } from "../types/type";
+
+export const countryData: Country[] = [
   {
     name: "United States",
     currency: "USD", // United States Dollar

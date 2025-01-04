@@ -3,7 +3,6 @@ import axios from "axios";
 import Button from "../components/button/Button.tsx";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
-import background from "../assets/images/bg-footer.png";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../store/store.tsx";
@@ -213,7 +212,9 @@ export default function Home() {
 
       <div className="bg-[#F0F5FF] my-40 md:mt-64">
         <div
-          style={{ background: `url(${background}) no-repeat center/cover` }}
+          style={{
+            background: `url(${require("../assets/images/back.png")}) no-repeat center/cover`,
+          }}
           className="p-6 sm:p-10 md:p-20"
         >
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-center">

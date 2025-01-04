@@ -1,4 +1,5 @@
 export interface CardProps {
+  to: string;
   from: string;
 }
 
@@ -16,4 +17,9 @@ export interface DropdownItem {
 export interface SearchableDropdownProps {
   items: DropdownItem[];
   defaultSelected: DropdownItem;
+}
+
+export interface Country {
+  name: string;
+  currency: string;
 }

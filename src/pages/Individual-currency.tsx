@@ -1,8 +1,7 @@
 import React from "react";
-import img from "../assets/images/vector.png";
 import Button from "../components/button/Button.tsx";
 import Card from "../components/card/Card.tsx";
-import { cardData } from "../constants/data.tsx";
+import { cardData } from "../constants/constants.tsx";
 
 export default function IndividualCurrency() {
   return (
@@ -24,7 +23,7 @@ export default function IndividualCurrency() {
           </div>
         </div>
         <div className="mt-8">
-          <img src={img} alt="" />
+          <img src={require("../assets/images/vector.png")} alt="" />
         </div>
       </div>
 
