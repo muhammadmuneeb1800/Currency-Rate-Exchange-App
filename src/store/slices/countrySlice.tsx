@@ -4,7 +4,7 @@ import axios from "axios";
 import { countryData } from "../../constants/constants.tsx";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://v6.exchangerate-api.com/v6/c8300ce18a0576647d4421f7",
+  baseURL: "https://v6.exchangerate-api.com/v6/ec23aae12ae640e6ea750432",
   timeout: 5000,
 });
 

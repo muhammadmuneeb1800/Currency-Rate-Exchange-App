@@ -45,7 +45,7 @@ export default function Home() {
 
     try {
       const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/602339e67573287ccc7bae40/pair/${fromCurrency}/${toCurrency}/${amount}`
+        `https://v6.exchangerate-api.com/v6/ec23aae12ae640e6ea750432/pair/${fromCurrency}/${toCurrency}/${amount}`
       );
       const result = await response.data.conversion_result;
       setUpdatedAmount(result);
