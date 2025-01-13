@@ -16,6 +16,8 @@ export default function Home() {
   const [selected, setSelected] = useState<number | string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
+  const [isOpenMainDrop, setIsOpenMainDrop] = useState<boolean>(false);
+  const [isOpenSubMainDrop, setIsOpenSubMainDrop] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
@@ -45,7 +47,7 @@ export default function Home() {
 
     try {
       const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/ec23aae12ae640e6ea750432/pair/${fromCurrency}/${toCurrency}/${amount}`
+        `https://v6.exchangerate-api.com/v6/5d841d1cfc907395ecdc68ce/pair/${fromCurrency}/${toCurrency}/${amount}`
       );
       const result = await response.data.conversion_result;
       setUpdatedAmount(result);
@@ -78,70 +80,102 @@ export default function Home() {
               competitive rates with no hidden fees.
             </p>
             <div className="mt-8 px-11 md:px-8 flex flex-col space-y-2 md:flex md:flex-row justify-between items-center">
-              <div className="flex flex-row">
-                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
-                  <label htmlFor="amount">Amount</label>
-                  <input
-                    type="text"
-                    className="outline-none focus:border focus:border-none bg-none font-bold text-xl md:text-2xl"
-                    name="amount"
-                    id="amount"
-                    placeholder="0"
-                    value={amount || ""}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
+              <div>
+                <div className="flex flex-row">
+                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                    <label htmlFor="amount">Amount</label>
+                    <input
+                      type="text"
+                      className="outline-none focus:border focus:border-none bg-none font-bold text-xl md:text-2xl"
+                      name="amount"
+                      id="amount"
+                      placeholder="0"
+                      value={amount || ""}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
+                    <div
+                      onClick={() => setIsOpenMainDrop(!isOpenMainDrop)}
+                      className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
+                    >
+                      <div className="select-none">{fromCurrency || "USD"}</div>
+                      <div className="ml-5">
+                        <BiChevronDown size={20} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
-                  <select
-                    name="selectCurrency"
-                    id=""
-                    value={fromCurrency || "USD"}
-                    onChange={(e) => setFromCurrency(e.target.value)}
-                    className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
+                {isOpenMainDrop && (
+                  <div
+                    className={`absolute z-30 bg-white md:w-[320px] lg:w-[350px] w-[258px] border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
                   >
                     {ConNames?.map((con, i) => {
                       return (
-                        <option key={i} value={con}>
+                        <div
+                          key={i}
+                          onClick={() => {
+                            setFromCurrency(con);
+                            setIsOpenMainDrop(false);
+                          }}
+                          className="px-4 py-2 text-xl pr-11 text-end font-bold hover:bg-gray-100 cursor-pointer"
+                        >
                           {con}
-                        </option>
+                        </div>
                       );
                     })}
-                  </select>
-                </div>
+                  </div>
+                )}
               </div>
               <button onClick={handleAmountChange} className="text-3xl mt-2">
                 <LiaExchangeAltSolid />
               </button>
-              <div className="flex flex-row">
-                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
-                  <label htmlFor="fromCurrency">Converted to</label>
-                  <input
-                    type="text"
-                    className="outline-none focus:border focus:border-none font-bold text-xl md:text-2xl"
-                    name="fromCurrency"
-                    id="fromCurrency"
-                    readOnly
-                    value={updatedAmount || 0}
-                    onChange={(e) => setUpdatedAmount(e.target.value)}
-                  />
+              <div>
+                <div className="flex flex-row">
+                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                    <label htmlFor="fromCurrency">Converted to</label>
+                    <input
+                      type="text"
+                      className="outline-none focus:border focus:border-none font-bold text-xl md:text-2xl"
+                      name="fromCurrency"
+                      id="fromCurrency"
+                      readOnly
+                      value={updatedAmount || 0}
+                      onChange={(e) => setUpdatedAmount(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
+                    <div
+                      onClick={() => setIsOpenSubMainDrop(!isOpenSubMainDrop)}
+                      className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
+                    >
+                      <div className="select-none">{toCurrency || "EUR"}</div>
+                      <div className="ml-5">
+                        <BiChevronDown size={20} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
-                  <select
-                    name="selectCurrency"
-                    id=""
-                    value={toCurrency}
-                    onChange={(e) => setToCurrency(e.target.value)}
-                    className="border-none focus:border focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
+                {isOpenSubMainDrop && (
+                  <div
+                    className={`absolute z-30 bg-white md:w-[320px] lg:w-[350px] w-[258px] border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
                   >
                     {ConNames?.map((con, i) => {
                       return (
-                        <option key={i} value={con}>
+                        <div
+                          key={i}
+                          onClick={() => {
+                            setToCurrency(con);
+                            setIsOpenSubMainDrop(false);
+                          }}
+                          className="px-4 py-2 text-xl pr-11 text-end font-bold hover:bg-gray-100 cursor-pointer"
+                        >
                           {con}
-                        </option>
+                        </div>
                       );
                     })}
-                  </select>
-                </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="text-start pl-12 mt-5">

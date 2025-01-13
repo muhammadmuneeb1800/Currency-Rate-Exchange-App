@@ -22,6 +22,7 @@ export default function Convert() {
   const [isOpenDrop, setIsOpenDrop] = useState<boolean>(false);
   const [selected, setSelected] = useState<number | string>("EUR");
   const [inputValue, setInputValue] = useState<string>("");
+  const [isOpenHo, setIsOpenHo] = useState<boolean>(false);
 
   const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
   const ConRates = useAppSelector((store) => store.countrySlice.names) || [];
@@ -40,7 +41,7 @@ export default function Convert() {
     if (currency) setSelectedCurrency(currency);
     if (from) setSelectedCurrency(from);
     if (to) setSelected(to);
-  }, [dispatch, getQueryParam]);
+  }, [dispatch]);
 
   const handleAmountChange = () => {
     setSelAmount(selUpdatedAmount);
@@ -89,18 +90,17 @@ export default function Convert() {
                   />
                 </div>
                 <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6]">
-                  <select
-                    name="selectCurrency"
-                    value={selectedCurrency || "USD"}
-                    onChange={(e) => setSelectedCurrency(e.target.value)}
-                    className="border-none focus:border-none mt-7 px-5 focus-within:outline-none font-bold text-xl md:text-2xl"
+                  <div
+                    onClick={() => setIsOpenHo(!isOpenHo)}
+                    className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
                   >
-                    {ConNames?.map((con) => (
-                      <option key={con} value={con}>
-                        {con}
-                      </option>
-                    ))}
-                  </select>
+                    <div className="select-none">
+                      {selectedCurrency || "USD"}
+                    </div>
+                    <div className="ml-5">
+                      <BiChevronDown size={20} />
+                    </div>
+                  </div>
                 </div>
               </div>
               <button onClick={handleAmountChange} className="text-3xl mt-2">
@@ -178,6 +178,30 @@ export default function Convert() {
                 </div>
               </div>
             </div>
+            {isOpenHo && (
+              <div
+                className={`absolute lg:-mt-[5px] -mt-[125px] lg:w-[355px] md:w-[315px] lg:ml-8 md:ml-[80px] ml-[24px] ${
+                  selUpdatedAmount
+                    ? "md:-mt-[144px] -mt-[267px]"
+                    : "-mt-[102px]"
+                } z-30 md:w-[352px] w-[256px] bg-white border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
+              >
+                {ConNames?.map((con, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setSelectedCurrency(con);
+                        setIsOpenHo(false);
+                      }}
+                      className="px-4 py-2 text-xl pr-11 text-end font-bold hover:bg-gray-100 cursor-pointer"
+                    >
+                      {con}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <div className="text-start pl-12 mt-5">
               {selUpdatedAmount ? (
                 <div className="flex items-center gap-2">
