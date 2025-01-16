@@ -7,6 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../store/store.tsx";
 import { useQueryParams } from "../hooks/useQueryParams.tsx";
 import { useCurrencyConverter } from "../hooks/useCurrencyConverter.tsx";
+import { ImCross } from "react-icons/im";
 
 export default function Convert() {
   const getQueryParam = useQueryParams();
@@ -219,6 +220,12 @@ export default function Convert() {
                     {iconVisible && (
                       <div className="fixed -ml-40 mt-28 inset-0 bg-opacity- z-10 flex items-center justify-center">
                         <div className="bg-[#F0F5FF] text-[#3D55DD] p-[20px] rounded-md shadow-lg">
+                          <p
+                            className="float-end cursor-pointer"
+                            onClick={() => setIconVisible(false)}
+                          >
+                            <ImCross />
+                          </p>
                           <p className="text-xl font-bold text-[#3D55DD]">
                             Exchange rate at 14:00 GMT.
                           </p>

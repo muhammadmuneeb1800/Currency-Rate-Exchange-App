@@ -6,6 +6,7 @@ import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../store/store.tsx";
+import { ImCross } from "react-icons/im";
 
 export default function Home() {
   const [amount, setAmount] = useState(0);
@@ -197,6 +198,12 @@ export default function Home() {
                       {iconVisible && (
                         <div className="fixed -ml-40 -mt-14 inset-0 bg-opacity- z-10 flex items-center justify-center">
                           <div className="bg-[#F0F5FF] text-[#3D55DD] p-[20px] rounded-md shadow-lg">
+                            <p
+                              className="float-end cursor-pointer"
+                              onClick={() => setIconVisible(false)}
+                            >
+                              <ImCross />
+                            </p>
                             <p className="text-xl font-bold text-[#3D55DD]">
                               Exchange rate at 14:00 GMT.
                             </p>
