@@ -4,7 +4,7 @@ import Button from "../components/button/Button.tsx";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useAppDispatch, useAppSelector } from "../store/store.tsx";
+import { useAppDispatch, useAppSelector } from "../store/store.ts";
 import { useQueryParams } from "../hooks/useQueryParams.tsx";
 import { useCurrencyConverter } from "../hooks/useCurrencyConverter.tsx";
 import { ImCross } from "react-icons/im";
@@ -25,12 +25,12 @@ export default function Convert() {
   const [inputValue, setInputValue] = useState<string>("");
   const [isOpenHo, setIsOpenHo] = useState<boolean>(false);
 
-  const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
-  const ConRates = useAppSelector((store) => store.countrySlice.names) || [];
+  const conNames = useAppSelector((store) => store.countrySlice.rates) || [];
+  const conRates = useAppSelector((store) => store.countrySlice.names) || [];
   const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
 
-  const nameIndex = ConNames.indexOf(selectedCurrency) || "";
-  const rateIndex = ConNames.indexOf(selected) || "";
+  const nameIndex = conNames.indexOf(selectedCurrency) || "";
+  const rateIndex = conNames.indexOf(selected) || "";
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Convert() {
       <div className="pt-5 pl-2">
         <Button text="Home" link="/" />
       </div>
-      <div className="bg-[#F0F5FF] md:px-14 px-4 items-center mt-16 py-16 max-h-[450px]">
+      <div className="bg-light md:px-14 px-4 items-center mt-16 py-16 max-h-[450px]">
         <div className="md:max-w-[350px] mx-auto lg:max-w-[590px]">
           <h1 className="lg:text-5xl font-bold text-center text-3xl md:text-4xl">
             Convert {selectedCurrency || "USD"} to {selected || "GBP"}
@@ -78,7 +78,7 @@ export default function Convert() {
 
             <div className="mt-8 px-11 md:px-8 flex flex-col space-y-2 md:flex md:flex-row justify-between items-center">
               <div className="flex flex-row">
-                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-secondary px-4 py-1">
                   <label htmlFor="selamount">Amount</label>
                   <input
                     type="text"
@@ -90,7 +90,7 @@ export default function Convert() {
                     onChange={(e) => setSelAmount(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6]">
+                <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-secondary">
                   <div
                     onClick={() => setIsOpenHo(!isOpenHo)}
                     className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
@@ -108,7 +108,7 @@ export default function Convert() {
                 <LiaExchangeAltSolid />
               </button>
               <div className="flex flex-row">
-                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-secondary px-4 py-1">
                   <label htmlFor="fromCurrency">Converted to</label>
                   <input
                     type="text"
@@ -118,7 +118,7 @@ export default function Convert() {
                     value={selUpdatedAmount}
                   />
                 </div>
-                <div className="flex select-none flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6]">
+                <div className="flex select-none flex-col text-start border space-y-1 w-32 h-20 border-secondary">
                   <div
                     onClick={() => setIsOpenDrop(!isOpenDrop)}
                     className="text-xl flex select-none mb-4 justify-between items-center md:text-2xl font-bold text-center mt-7"
@@ -151,7 +151,7 @@ export default function Convert() {
                                   ?.toLowerCase()
                                   .includes(inputValue)
                               )
-                              .map((country, i) => (
+                              ?.map((country, i) => (
                                 <li
                                   key={i}
                                   className={`p-2 hover:bg-gray-100 text-xl font-bold hover:text-black cursor-pointer ${
@@ -187,7 +187,7 @@ export default function Convert() {
                     : "-mt-[102px]"
                 } z-30 md:w-[352px] w-[256px] bg-white border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
               >
-                {ConNames?.map((con, i) => {
+                {conNames?.map((con, i) => {
                   return (
                     <div
                       key={i}
@@ -207,26 +207,26 @@ export default function Convert() {
               {selUpdatedAmount ? (
                 <div className="flex items-center gap-2">
                   <p className="text-md font-medium">
-                    {ConRates[nameIndex]} {selectedCurrency} ={" "}
-                    {ConRates[rateIndex]} {selected}
+                    {conRates[nameIndex]} {selectedCurrency} ={" "}
+                    {conRates[rateIndex]} {selected}
                   </p>
                   <div className="relative">
                     <p
                       onClick={showInfo}
-                      className="bg-[#3D55DD] text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
+                      className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
                     >
                       i
                     </p>
                     {iconVisible && (
                       <div className="fixed -ml-40 mt-28 inset-0 bg-opacity- z-10 flex items-center justify-center">
-                        <div className="bg-[#F0F5FF] text-[#3D55DD] p-[20px] rounded-md shadow-lg">
+                        <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
                           <p
                             className="float-end cursor-pointer"
                             onClick={() => setIconVisible(false)}
                           >
                             <ImCross />
                           </p>
-                          <p className="text-xl font-bold text-[#3D55DD]">
+                          <p className="text-xl font-bold text-primary">
                             Exchange rate at 14:00 GMT.
                           </p>
                           <p className="mt-[25px]">
@@ -257,7 +257,7 @@ export default function Convert() {
               }
               className="md:pr-14 text-center md:text-end mt-9"
             >
-              <Button text="Convert" pad="24" />
+              <Button text="Convert" pad={24} />
             </div>
           </div>
         </div>

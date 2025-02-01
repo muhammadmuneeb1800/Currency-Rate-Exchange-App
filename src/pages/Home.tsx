@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Button from "../components/button/Button.tsx";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { fetchCountry } from "../store/slices/countrySlice.tsx";
 import { BiChevronDown } from "react-icons/bi";
 import { AiOutlineSearch } from "react-icons/ai";
-import { useAppDispatch, useAppSelector } from "../store/store.tsx";
+import { useAppDispatch, useAppSelector } from "../store/store.ts";
 import { ImCross } from "react-icons/im";
+import { useConverterHome } from "../hooks/useConverterHome.tsx";
 
 export default function Home() {
-  const [amount, setAmount] = useState(0);
-  const [updatedAmount, setUpdatedAmount] = useState(0);
-  const [toCurrency, setToCurrency] = useState("EUR");
-  const [fromCurrency, setFromCurrency] = useState("USD");
   const [iconVisible, setIconVisible] = useState(false);
   const [selected, setSelected] = useState<number | string>("");
   const [inputValue, setInputValue] = useState<string>("");
@@ -20,48 +16,38 @@ export default function Home() {
   const [isOpenMainDrop, setIsOpenMainDrop] = useState<boolean>(false);
   const [isOpenSubMainDrop, setIsOpenSubMainDrop] = useState<boolean>(false);
 
+  const {
+    amount,
+    updatedAmount,
+    setUpdatedAmount,
+    fromCurrency,
+    toCurrency,
+    setAmount,
+    setFromCurrency,
+    setToCurrency,
+    convertHandle,
+    handleAmountChange,
+  } = useConverterHome();
+
   const dispatch = useAppDispatch();
-  const ConNames = useAppSelector((store) => store.countrySlice.rates) || [];
-  const ConRates = useAppSelector((store) => store.countrySlice.names) || [];
+  const conNames = useAppSelector((store) => store.countrySlice.rates) || [];
+  const conRates = useAppSelector((store) => store.countrySlice.names) || [];
   const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
 
-  const nameIndex = ConNames.indexOf(fromCurrency) || "";
-  const rateIndex = ConNames.indexOf(toCurrency) || "";
+  const nameIndex = conNames.indexOf(fromCurrency) || "";
+  const rateIndex = conNames.indexOf(toCurrency) || "";
 
   useEffect(() => {
     dispatch(fetchCountry());
   }, [dispatch]);
 
-  const handleAmountChange = () => {
-    setAmount(updatedAmount);
-    setUpdatedAmount(amount);
-  };
-
   const showInfo = () => {
     setIconVisible(!iconVisible);
   };
 
-  const convertHandle = async () => {
-    if (!amount) {
-      return alert("Enter amount");
-    }
-
-    try {
-      const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/5d841d1cfc907395ecdc68ce/pair/${fromCurrency}/${toCurrency}/${amount}`
-      );
-      const result = await response.data.conversion_result;
-      setUpdatedAmount(result);
-      console.log(setUpdatedAmount(result));
-    } catch (error) {
-      console.error("Error fetching conversion data:", error);
-      alert("Failed to fetch conversion data. Please try again.");
-    }
-  };
-
   return (
     <>
-      <div className="bg-[#F0F5FF] text-center mt-20 py-10 max-h-[550px]">
+      <div className="bg-light text-center mt-20 py-10 max-h-[550px]">
         <h1 className="lg:text-5xl font-bold text-center text-3xl md:text-4xl">
           Currency Converter
         </h1>
@@ -83,7 +69,7 @@ export default function Home() {
             <div className="mt-8 px-11 md:px-8 flex flex-col space-y-2 md:flex md:flex-row justify-between items-center">
               <div>
                 <div className="flex flex-row">
-                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-secondary px-4 py-1">
                     <label htmlFor="amount">Amount</label>
                     <input
                       type="text"
@@ -95,7 +81,7 @@ export default function Home() {
                       onChange={(e) => setAmount(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
+                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-secondary ">
                     <div
                       onClick={() => setIsOpenMainDrop(!isOpenMainDrop)}
                       className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
@@ -111,7 +97,7 @@ export default function Home() {
                   <div
                     className={`absolute z-30 bg-white md:w-[320px] lg:w-[350px] w-[258px] border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
                   >
-                    {ConNames?.map((con, i) => {
+                    {conNames?.map((con, i) => {
                       return (
                         <div
                           key={i}
@@ -133,7 +119,7 @@ export default function Home() {
               </button>
               <div>
                 <div className="flex flex-row">
-                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-[#C6C6C6] px-4 py-1">
+                  <div className="flex flex-col w-32 md:w-48 lg:w-56 text-start border space-y-1 border-secondary px-4 py-1">
                     <label htmlFor="fromCurrency">Converted to</label>
                     <input
                       type="text"
@@ -145,7 +131,7 @@ export default function Home() {
                       onChange={(e) => setUpdatedAmount(e.target.value)}
                     />
                   </div>
-                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-[#C6C6C6] ">
+                  <div className="flex flex-col text-start border space-y-1 w-32 h-20 border-secondary ">
                     <div
                       onClick={() => setIsOpenSubMainDrop(!isOpenSubMainDrop)}
                       className="text-center flex ml-5 items-center gap-3 font-bold mt-7 text-xl md:text-2xl"
@@ -161,7 +147,7 @@ export default function Home() {
                   <div
                     className={`absolute z-30 bg-white md:w-[320px] lg:w-[350px] w-[258px] border-2 rounded-md shadow-md overflow-y-auto max-h-56`}
                   >
-                    {ConNames?.map((con, i) => {
+                    {conNames?.map((con, i) => {
                       return (
                         <div
                           key={i}
@@ -184,27 +170,28 @@ export default function Home() {
                 <>
                   <div className="flex items-center gap-2">
                     <p className="text-md font-medium">
-                      {ConRates[nameIndex]} {"  "} {fromCurrency} ={"  "}
-                      {ConRates[rateIndex]}
+                      {conRates[nameIndex]?.toString().split(".")[0]} {"  "}{" "}
+                      {fromCurrency} ={"  "}
+                      {conRates[rateIndex]}
                       {"  "} {toCurrency}
                     </p>
                     <div className="relative">
                       <p
                         onClick={showInfo}
-                        className="bg-[#3D55DD] text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
+                        className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
                       >
                         i
                       </p>
                       {iconVisible && (
                         <div className="fixed -ml-40 -mt-14 inset-0 bg-opacity- z-10 flex items-center justify-center">
-                          <div className="bg-[#F0F5FF] text-[#3D55DD] p-[20px] rounded-md shadow-lg">
+                          <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
                             <p
                               className="float-end cursor-pointer"
                               onClick={() => setIconVisible(false)}
                             >
                               <ImCross />
                             </p>
-                            <p className="text-xl font-bold text-[#3D55DD]">
+                            <p className="text-xl font-bold text-primary">
                               Exchange rate at 14:00 GMT.
                             </p>
                             <p className="mt-[25px]">
@@ -230,7 +217,7 @@ export default function Home() {
               )}
             </div>
             <div onClick={convertHandle} className="md:pr-14 md:text-end mt-9">
-              <Button text="Convert" pad="24" />
+              <Button text="Convert" pad={24} />
             </div>
           </div>
         </div>
@@ -251,7 +238,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="bg-[#F0F5FF] my-40 md:mt-64">
+      <div className="bg-light my-40 md:mt-64">
         <div
           style={{
             background: `url(${require("../assets/images/back.png")}) no-repeat center/cover`,
@@ -302,7 +289,7 @@ export default function Home() {
                         .filter((country) =>
                           country?.currency?.toLowerCase().includes(inputValue)
                         )
-                        .map((country, i) => (
+                        ?.map((country, i) => (
                           <li
                             key={i}
                             className={`p-2 hover:bg-gray-100 text-lg font-medium cursor-pointer ${
@@ -338,7 +325,7 @@ export default function Home() {
               <Button
                 link={`convert?currency=${selected || "USD"}`}
                 text="Go"
-                pad="24"
+                pad={24}
               />
             </div>
           </div>

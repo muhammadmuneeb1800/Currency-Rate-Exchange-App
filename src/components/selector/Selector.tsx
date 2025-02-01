@@ -60,7 +60,7 @@ const Selectors: React.FC = () => {
               .filter((country) =>
                 country?.name?.toLowerCase().includes(inputValue)
               )
-              .map((country) => (
+              ?.map((country) => (
                 <li
                   key={country?.name}
                   className={`p-2 hover:bg-sky-600 text-md overflow-x-hidden font-bold hover:text-white cursor-pointer ${

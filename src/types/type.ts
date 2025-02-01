@@ -3,7 +3,7 @@ export interface CardProps {
   from: string;
 }
 
-export interface TypeOfArray {
+export interface initialStateType {
   names: string[];
   rates: string[];
   dataData: { name: string; currency: string }[];
@@ -22,4 +22,10 @@ export interface SearchableDropdownProps {
 export interface Country {
   name: string;
   currency: string;
+}
+
+export interface ButtonProps {
+  link?: string;
+  text?: string;
+  pad?: 4 | 8 | 16 | 24 | string;
 }

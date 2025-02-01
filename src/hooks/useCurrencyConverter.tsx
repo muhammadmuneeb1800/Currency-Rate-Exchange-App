@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { axiosInstance } from "../store/slices/countrySlice.tsx";
+import { axiosInstance } from "./../utils/axiosInstance.ts";
 
 export const useCurrencyConverter = () => {
   const [selamount, setSelAmount] = useState<number | string>(0);
