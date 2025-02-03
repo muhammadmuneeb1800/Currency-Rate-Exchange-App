@@ -170,8 +170,8 @@ export default function Home() {
                 <>
                   <div className="flex items-center gap-2">
                     <p className="text-md font-medium">
-                      {conRates[nameIndex]?.toString().split(".")[0]} {"  "}{" "}
-                      {fromCurrency} ={"  "}
+                      {conRates[nameIndex]?.toFixed(2)}
+                      {"  "} {fromCurrency} ={"  "}
                       {conRates[rateIndex]}
                       {"  "} {toCurrency}
                     </p>
