@@ -25,17 +25,20 @@ export default function Home() {
     setAmount,
     setFromCurrency,
     setToCurrency,
+    resultData,
     convertHandle,
     handleAmountChange,
   } = useConverterHome();
 
   const dispatch = useAppDispatch();
   const conNames = useAppSelector((store) => store.countrySlice.rates) || [];
-  const conRates = useAppSelector((store) => store.countrySlice.names) || [];
   const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
+  const resultRates =
+    useAppSelector((store) => store.countrySlice.resultName) || [];
+  const resultName =
+    useAppSelector((store) => store.countrySlice.resultRates) || [];
 
-  const nameIndex = conNames.indexOf(fromCurrency) || "";
-  const rateIndex = conNames.indexOf(toCurrency) || "";
+  const rateIndex = resultName.indexOf(toCurrency) || "";
 
   useEffect(() => {
     dispatch(fetchCountry());
@@ -165,57 +168,61 @@ export default function Home() {
                 )}
               </div>
             </div>
-            <div className="text-start pl-12 mt-5">
-              {updatedAmount ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <p className="text-md font-medium">
-                      {conRates[nameIndex]?.toFixed(2)}
-                      {"  "} {fromCurrency} ={"  "}
-                      {conRates[rateIndex]}
-                      {"  "} {toCurrency}
-                    </p>
-                    <div className="relative">
-                      <p
-                        onClick={showInfo}
-                        className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
-                      >
-                        i
+            {resultData === fromCurrency ? (
+              <div className="text-start pl-12 mt-5">
+                {updatedAmount ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <p className="text-md font-medium">
+                        {1}
+                        {"  "} {fromCurrency} ={"  "}
+                        {resultRates[rateIndex]}
+                        {"  "} {toCurrency}
                       </p>
-                      {iconVisible && (
-                        <div className="fixed -ml-40 -mt-14 inset-0 bg-opacity- z-10 flex items-center justify-center">
-                          <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
-                            <p
-                              className="float-end cursor-pointer"
-                              onClick={() => setIconVisible(false)}
-                            >
-                              <ImCross />
-                            </p>
-                            <p className="text-xl font-bold text-primary">
-                              Exchange rate at 14:00 GMT.
-                            </p>
-                            <p className="mt-[25px]">
-                              Live rates vary minute to minute. The <br />{" "}
-                              quotes you receive here will differ to <br /> your
-                              final trade amount.
-                              <br />
-                              <p className="mt-[20px]">
-                                Lorem ipsum dolor sit amet <br /> consectetur
-                                adipiscing elit mod duo sed <br /> eiusmod lorem
-                                ipsum dolor sit amet
-                                <br /> consectetur adipiscing elit mod duo.
+                      <div className="relative">
+                        <p
+                          onClick={showInfo}
+                          className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
+                        >
+                          i
+                        </p>
+                        {iconVisible && (
+                          <div className="fixed -ml-40 -mt-14 inset-0 bg-opacity- z-10 flex items-center justify-center">
+                            <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
+                              <p
+                                className="float-end cursor-pointer"
+                                onClick={() => setIconVisible(false)}
+                              >
+                                <ImCross />
                               </p>
-                            </p>
+                              <p className="text-xl font-bold text-primary">
+                                Exchange rate at 14:00 GMT.
+                              </p>
+                              <p className="mt-[25px]">
+                                Live rates vary minute to minute. The <br />{" "}
+                                quotes you receive here will differ to <br />{" "}
+                                your final trade amount.
+                                <br />
+                                <p className="mt-[20px]">
+                                  Lorem ipsum dolor sit amet <br /> consectetur
+                                  adipiscing elit mod duo sed <br /> eiusmod
+                                  lorem ipsum dolor sit amet
+                                  <br /> consectetur adipiscing elit mod duo.
+                                </p>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </>
-              ) : (
-                ""
-              )}
-            </div>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
             <div onClick={convertHandle} className="md:pr-14 md:text-end mt-9">
               <Button text="Convert" pad={24} />
             </div>

@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { axiosInstance } from "../utils/axiosInstance.ts";
+import { fetchCountryByName } from "../store/slices/countrySlice.tsx";
+import { useAppDispatch } from "../store/store.ts";
 
 export function useConverterHome() {
   const [amount, setAmount] = useState(0);
   const [updatedAmount, setUpdatedAmount] = useState(0);
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
+  const[resultData,setResultData] = useState('')
+  const dispatch = useAppDispatch()
 
   const handleAmountChange = () => {
     setAmount(updatedAmount);
@@ -21,6 +25,8 @@ export function useConverterHome() {
         `pair/${fromCurrency}/${toCurrency}/${amount}`
       );
       setUpdatedAmount(response.data.conversion_result);
+      setResultData(fromCurrency);
+      dispatch(fetchCountryByName(fromCurrency));
     } catch (error) {
       console.error("Error fetching conversion data:", error);
       alert("Failed to fetch conversion data. Please try again.");
@@ -36,6 +42,7 @@ export function useConverterHome() {
     setAmount,
     setFromCurrency,
     setToCurrency,
+    resultData,
     convertHandle,
     handleAmountChange,
   };

@@ -6,6 +6,8 @@ export interface CardProps {
 export interface initialStateType {
   names: string[];
   rates: string[];
+  resultName?: string[];
+  resultRates?: string[];
   dataData: { name: string; currency: string }[];
 }
 

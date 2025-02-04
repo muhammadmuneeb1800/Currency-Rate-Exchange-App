@@ -16,6 +16,7 @@ export default function Convert() {
     setSelAmount,
     selUpdatedAmount,
     setSelUpdatedAmount,
+    resultData,
     convertHandler,
   } = useCurrencyConverter();
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -26,11 +27,14 @@ export default function Convert() {
   const [isOpenHo, setIsOpenHo] = useState<boolean>(false);
 
   const conNames = useAppSelector((store) => store.countrySlice.rates) || [];
-  const conRates = useAppSelector((store) => store.countrySlice.names) || [];
   const dataData = useAppSelector((store) => store.countrySlice.dataData) || [];
+  const resultRates =
+    useAppSelector((store) => store.countrySlice.resultName) || [];
+  const resultName =
+    useAppSelector((store) => store.countrySlice.resultRates) || [];
 
-  const nameIndex = conNames.indexOf(selectedCurrency) || "";
-  const rateIndex = conNames.indexOf(selected) || "";
+  const rateIndex = resultName.indexOf(selected) || "";
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -203,54 +207,62 @@ export default function Convert() {
                 })}
               </div>
             )}
-            <div className="text-start pl-12 mt-5">
-              {selUpdatedAmount ? (
-                <div className="flex items-center gap-2">
-                  <p className="text-md font-medium">
-                    {conRates[nameIndex]} {selectedCurrency} ={" "}
-                    {conRates[rateIndex]} {selected}
-                  </p>
-                  <div className="relative">
-                    <p
-                      onClick={showInfo}
-                      className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
-                    >
-                      i
-                    </p>
-                    {iconVisible && (
-                      <div className="fixed -ml-40 mt-28 inset-0 bg-opacity- z-10 flex items-center justify-center">
-                        <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
-                          <p
-                            className="float-end cursor-pointer"
-                            onClick={() => setIconVisible(false)}
-                          >
-                            <ImCross />
-                          </p>
-                          <p className="text-xl font-bold text-primary">
-                            Exchange rate at 14:00 GMT.
-                          </p>
-                          <p className="mt-[25px]">
-                            Live rates vary minute to minute. The <br /> quotes
-                            you receive here will differ to <br /> your final
-                            trade amount.
-                            <br />
-                            <p className="mt-[20px]">
-                              Lorem ipsum dolor sit amet <br /> consectetur
-                              adipiscing elit mod duo sed <br /> eiusmod lorem
-                              ipsum dolor sit amet
-                              <br /> consectetur adipiscing elit mod duo.
-                            </p>
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
 
+            {resultData === selectedCurrency ? (
+              <div className="text-start pl-12 mt-5">
+                {selUpdatedAmount ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <p className="text-md font-medium">
+                        {1}
+                        {"  "} {selectedCurrency} ={"  "}
+                        {resultRates[rateIndex]}
+                        {"  "} {selected}
+                      </p>
+                      <div className="relative">
+                        <p
+                          onClick={showInfo}
+                          className="bg-primary text-white rounded-full w-5 h-5 font-bold cursor-pointer text-center"
+                        >
+                          i
+                        </p>
+                        {iconVisible && (
+                          <div className="fixed -ml-40 -mt-14 inset-0 bg-opacity- z-10 flex items-center justify-center">
+                            <div className="bg-light text-primary p-[20px] rounded-md shadow-lg">
+                              <p
+                                className="float-end cursor-pointer"
+                                onClick={() => setIconVisible(false)}
+                              >
+                                <ImCross />
+                              </p>
+                              <p className="text-xl font-bold text-primary">
+                                Exchange rate at 14:00 GMT.
+                              </p>
+                              <p className="mt-[25px]">
+                                Live rates vary minute to minute. The <br />{" "}
+                                quotes you receive here will differ to <br />{" "}
+                                your final trade amount.
+                                <br />
+                                <p className="mt-[20px]">
+                                  Lorem ipsum dolor sit amet <br /> consectetur
+                                  adipiscing elit mod duo sed <br /> eiusmod
+                                  lorem ipsum dolor sit amet
+                                  <br /> consectetur adipiscing elit mod duo.
+                                </p>
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              ""
+            )}
             <div
               onClick={() =>
                 convertHandler(selectedCurrency, selected, selamount)
